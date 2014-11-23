@@ -11,4 +11,4 @@ Type `:l h1` to load functions from `h1.hs` (for example).
 Browse loaded symbols (and their parameter types) with `:browse!` and invoke
 them directly.
 
-Use `:r` to reload the file if you change it.
+Use `:r` to reload a changed file.
