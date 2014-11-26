@@ -20,16 +20,45 @@ type ErrorMessage = String
 -- foldl :: (b -> a -> b) -> b -> [a] -> b
 -- foldr :: (a -> b -> b) -> b -> [a] -> b
 
--- Doesn't fully work as per the exercise question.
--- It returns an exception rather than a Left if there are chars.
+myFolder :: Char -> Either ErrorMessage Int -> Either ErrorMessage Int
+myFolder c (Left message) = Left message
+myFolder c (Right tot)
+    | isDigit c   = Right $ (tot * 10) + (digitToInt c)
+    | otherwise   = Left $ "non-digit '" ++ [c] ++ "'"
+
 asInt_either :: String -> Either ErrorMessage Int
-asInt_either "" = Left "empty string"
-asInt_either xs@(x:xs')
+asInt_either ""       = Left "empty string"
+asInt_either ('-':xs) =
+    case (asInt_either $ xs) of
+        Left message -> Left message
+        Right answer -> Right ((-1) * answer)
+asInt_either xs = foldr myFolder (Right 0) $ reverse xs
 
-    | x == '-'        = Right ((-1) * (parse_digits xs'))
-    | not (isDigit x) = Left ("non-digit'" ++ [x] ++ "'")
-    | otherwise       = Right (parse_digits xs)
 
+myConcat :: [[a]] -> [a]
+myConcat [[]] = []
+myConcat xxs = foldr f [] xxs
     where
-        parse_digits str  = foldl f 0 str
-        f tot c = (tot * 10) + (digitToInt c)
+        f x acc = acc ++ x
+
+
+myTakeWhile           :: (a -> Bool) -> [a] -> [a]
+myTakeWhile _ []      = []
+myTakeWhile f (x:xs)
+    | f x             = x : (myTakeWhile f xs)
+    | otherwise       = []
+
+--myTakeWhile'        :: (a -> Bool) -> [a] -> [a]
+--myTakeWhile' _ []   = []
+--myTakeWhile' p xs =
+--    foldr stepper [] xs
+--    where
+--        stepper x acc
+--            | not p x   = 
+
+notMyTakeWhile :: (a -> Bool) -> [a] -> [a]
+notMyTakeWhile p ls = foldr step [] ls
+    where
+        step x acc
+            | p x       = x : acc
+            | otherwise = []
