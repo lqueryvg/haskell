@@ -16,6 +16,12 @@ asInt_fold xs = foldl f 0 xs
 
 type ErrorMessage = String
 
+
+-- foldl :: (b -> a -> b) -> b -> [a] -> b
+-- foldr :: (a -> b -> b) -> b -> [a] -> b
+
+-- Doesn't fully work as per the exercise question.
+-- It returns an exception rather than a Left if there are chars.
 asInt_either :: String -> Either ErrorMessage Int
 asInt_either "" = Left "empty string"
 asInt_either xs@(x:xs')
@@ -25,5 +31,5 @@ asInt_either xs@(x:xs')
     | otherwise       = Right (parse_digits xs)
 
     where
-        parse_digits str  = foldr f 0 str
+        parse_digits str  = foldl f 0 str
         f tot c = (tot * 10) + (digitToInt c)
