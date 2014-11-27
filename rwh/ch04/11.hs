@@ -62,3 +62,24 @@ notMyTakeWhile p ls = foldr step [] ls
         step x acc
             | p x       = x : acc
             | otherwise = []
+
+
+myGroupBy :: (a -> a -> Bool) -> [a] -> [[a]]
+myGroupBy p xs = foldr fold_fn [] xs
+    where
+        fold_fn x [] = [[x]]
+        fold_fn x z@(s:ss)
+            | p x (head s) = (x : s) : ss
+            | otherwise    = [x] : z
+
+-- myGroupByL :: (a -> a -> Bool) -> [a] -> [[a]]
+-- myGroupByL p xs = foldl fold_fn [] xs
+--     where
+--         fold_fn [] x    = [[x]]
+--         fold_fn z@(s:ss) x
+--             | p x last_ss = s : last_ss ++ x
+--             | null ss       = s ++ [[x]]
+--             (x : s) : ss
+--             | otherwise     = z ++ x
+--             where last_ss = last ss
+-- 
